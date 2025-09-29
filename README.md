@@ -1,135 +1,103 @@
-# Turborepo starter
+## Cucumbers
 
-This Turborepo starter is maintained by the Turborepo core team.
+A modern, production-ready authentication starter built with a monorepo architecture. This starter provides a complete user authentication system using email magic links, perfect for rapid application development. This starter comes with user registration, sign-in, and session management fully implemented using secure, passwordless authentication through email magic links.
 
-## Using this example
+### ✨ Features
 
-Run the following command:
+- **Passwordless Authentication**: Secure email magic link authentication
+- **User Registration & Sign-in**: Complete auth flow with form validation
+- **Session Management**: Secure session handling with automatic token refresh
+- **Type-Safe API**: End-to-end TypeScript with shared types
+- **Modern UI**: Beautiful, responsive components with Shadcn/UI
+- **Database Ready**: PostgreSQL schema with user and session tables
 
-```sh
-npx create-turbo@latest
-```
+### 🛠 Technology Stack
 
-## What's inside?
+**Frontend**
+- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
+- **[Shadcn/UI](https://ui.shadcn.com/)** - Modern, accessible UI components
+- **[TanStack Query](https://tanstack.com/query)** - Powerful data fetching and state management
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 
-This Turborepo includes the following packages/apps:
+**Backend**
+- **[Express.js](https://expressjs.com/)** - Minimal Node.js web framework
+- **[Stytch](https://stytch.com/)** - Authentication platform for magic links
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe server development
 
-### Apps and Packages
+**Database**
+- **[Drizzle ORM](https://orm.drizzle.team/)** - Type-safe database toolkit
+- **[Supabase](https://supabase.com/)** - PostgreSQL database hosting
+- **[PostgreSQL](https://www.postgresql.org/)** - Robust relational database
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Tools**
+- **[Turborepo](https://turborepo.com/)** - High-performance monorepo build system
+- **[ESLint](https://eslint.org/)** - Code linting and formatting
+- **[pnpm](https://pnpm.io/)** - Fast, disk space efficient package manager
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### 🔐 Authentication
 
-### Utilities
+The authentication system uses a secure, passwordless flow:
 
-This Turborepo has some additional tools already setup for you:
+**Sign-up Flow**
+1. User enters name and email on `/sign-up`
+2. System checks if user already exists
+3. If new user, creates account in database
+4. Sends magic link via Stytch to user's email
+5. User clicks magic link in email
+6. Magic link redirects to `/verify-magic-link` with token
+7. System verifies token with Stytch
+8. Creates session and redirects to dashboard
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+**Sign-in Flow**
+1. User enters email on `/sign-in`
+2. System verifies user exists in database
+3. Sends magic link via Stytch to user's email
+4. User clicks magic link in email
+5. Magic link redirects to `/verify-magic-link` with token
+6. System verifies token with Stytch
+7. Creates session and redirects to dashboard
 
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
+### 📁 Structure
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+cucumbers/
+├── apps/
+│   ├── next-js-app/          # Frontend Next.js application
+│   │   ├── app/              # App Router pages
+│   │   ├── components/       # Reusable UI components
+│   │   ├── hooks/            # Custom React hooks
+│   │   └── lib/              # Utility functions
+│   └── express-js-api/       # Backend Express.js API
+│       ├── src/
+│       │   ├── controllers/  # Route handlers
+│       │   └── routes/       # API route definitions
+│       └── server.ts         # Express server setup
+├── packages/
+│   ├── database/             # Shared database schema & client
+│   │   ├── src/
+│   │   │   └── schema.ts     # Drizzle database schema
+│   │   └── drizzle.config.ts # Database configuration
+│   ├── eslint-config/        # Shared ESLint configurations
+│   └── typescript-config/    # Shared TypeScript configurations
+└── package.json              # Workspace configuration
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 📝 Endpoints
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/users/sign-in` | POST | Sign in existing user and send magic link |
+| `/api/users/sign-out` | POST | Sign out and invalidate session |
+| `/api/users/sign-up` | POST | Register new user and send magic link |
+| `/api/users/verify-magic-link` | POST | Verify magic link token and create session |
+| `/api/users/me` | GET | Get current user info (requires auth) |
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+## 🔗 Resources
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- [Turborepo Documentation](https://turborepo.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Drizzle ORM Documentation](https://orm.drizzle.team/docs)
+- [Stytch Documentation](https://stytch.com/docs)
+- [Shadcn/UI Documentation](https://ui.shadcn.com/)
+- [TanStack Query Documentation](https://tanstack.com/query/latest)
